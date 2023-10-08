@@ -18,6 +18,7 @@
   justify-content: center;
   flex-direction: column;
   font-family: sans-serif;
+  background: #eee;
 }
 
 .nav-list {
@@ -120,6 +121,7 @@
   height: var(--chat-container-height);
   border: 1px solid black;
   width: var(--chat-container-width);
+  background: #fff;
 }
 
 .messages-container {
