@@ -1,84 +1,61 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { Message } from "./types";
 import Avatar from "./components/Avatar";
 import Send from "./assets/Send";
-import { Socket, io } from "socket.io-client";
+import { ChatMessages } from "./constants";
+
+export type Message = {
+  content: string;
+  sender: string;
+};
 
 function App() {
-  const [currentUser, setCurrentUser] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState<string>("");
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [socket, setSocket] = useState<Socket>();
-
-  useEffect(() => {
-    const socket = io("http://localhost:5000", {
-      transports: ["websocket", "polling", "flashsocket"],
-    });
-    setSocket(socket);
-    socket.on("message-received", (message) => {
-      setMessages((messages) => [...messages, message]);
-    });
-    socket.on("connected", (socketId) => {
-      setCurrentUser(socketId);
-    });
-
-    return () => {
-      socket.off("message-received");
-      socket.off("connected");
-    };
-  }, []);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [messages, setMessages] = useState<Message[]>(ChatMessages);
+  const scrollRef = useRef<HTMLLIElement>(null);
 
   const sendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(currentUser);
-    const content = input.trim();
-    const message = {
-      id: messages.length + 1,
-      sender: currentUser,
+    const form = e.target as HTMLFormElement;
+    const content = form.message.value.trim();
+    if (!content.length) return;
+
+    const message: Message = {
       content,
-      timestamp: new Date(),
+      sender: currentUserId,
     };
-    socket?.emit("send-message", message);
-    // if (content.length) setMessages((messages) => [...messages, message]);
-    setInput("");
+
+    setMessages((messages) => [...messages, message]);
+    form.reset();
   };
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView();
   }, [messages.length]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setInput(e.target.value);
-  };
-
   return (
     <div className="App">
       <div className="app-container">
         <main className="chat-container">
-          <section className="messages-container">
+          <ul className="messages-container">
             {messages.map((message) => (
-              <div
-                key={message.id}
+              <li
+                key={message.content}
                 className={`message-container ${
-                  message.sender === currentUser
+                  message.sender === currentUserId
                     ? "message-right"
                     : "message-left"
                 }`}
               >
-                <Avatar name={"U"} />
+                <Avatar name={"A"} />
                 <div className="message-content-container">
-                  <div className="message-content">{message.content}</div>
-                  <span className="message-timestamp">
-                    {message.timestamp.toLocaleString("en-au")}
-                  </span>
+                  <span className="message-content">{message.content}</span>
                 </div>
-              </div>
+              </li>
             ))}
-            <div ref={scrollRef} />
-          </section>
+            <li ref={scrollRef} />
+          </ul>
+
           <form className="form-container" onSubmit={sendMessage}>
             <input
               type="text"
@@ -86,17 +63,14 @@ function App() {
               name="message"
               autoComplete="off"
               autoFocus
-              value={input}
-              onChange={handleChange}
               placeholder="Enter a message"
             />
             <button
               type="submit"
               title="Send message"
               className="message-submit-button"
-              disabled={input.length < 1}
             >
-              <Send fill="white" />
+              Send
             </button>
           </form>
         </main>
