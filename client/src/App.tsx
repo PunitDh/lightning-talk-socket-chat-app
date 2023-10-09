@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import Avatar from "./components/Avatar";
-import Send from "./assets/Send";
 import { ChatMessages } from "./constants";
 
 export type Message = {
