@@ -21,6 +21,13 @@
   background: #eee;
 }
 
+.chat-container {
+  height: var(--chat-container-height);
+  border: 1px solid black;
+  width: var(--chat-container-width);
+  background: #fff;
+}
+
 .nav-list {
   list-style-type: none;
   display: flex;
@@ -61,12 +68,6 @@
   color: white;
   align-items: center;
   justify-content: center;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: row;
-  width: var(--chat-container-width);
 }
 
 .sidebar-container {
@@ -115,13 +116,6 @@
   width: 8rem;
   aspect-ratio: 1/1;
   text-align: right;
-}
-
-.chat-container {
-  height: var(--chat-container-height);
-  border: 1px solid black;
-  width: var(--chat-container-width);
-  background: #fff;
 }
 
 .messages-container {

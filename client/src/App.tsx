@@ -34,46 +34,44 @@ function App() {
 
   return (
     <div className="App">
-      <div className="app-container">
-        <main className="chat-container">
-          <ul className="messages-container">
-            {messages.map((message) => (
-              <li
-                key={message.content}
-                className={`message-container ${
-                  message.sender === currentUserId
-                    ? "message-right"
-                    : "message-left"
-                }`}
-              >
-                <Avatar name={"A"} />
-                <div className="message-content-container">
-                  <span className="message-content">{message.content}</span>
-                </div>
-              </li>
-            ))}
-            <li ref={scrollRef} />
-          </ul>
-
-          <form className="form-container" onSubmit={sendMessage}>
-            <input
-              type="text"
-              className="message-input"
-              name="message"
-              autoComplete="off"
-              autoFocus
-              placeholder="Enter a message"
-            />
-            <button
-              type="submit"
-              title="Send message"
-              className="message-submit-button"
+      <main className="chat-container">
+        <ul className="messages-container">
+          {messages.map((message, index) => (
+            <li
+              key={index}
+              className={`message-container ${
+                message.sender === currentUserId
+                  ? "message-right"
+                  : "message-left"
+              }`}
             >
-              Send
-            </button>
-          </form>
-        </main>
-      </div>
+              <Avatar name={"A"} />
+              <div className="message-content-container">
+                <span className="message-content">{message.content}</span>
+              </div>
+            </li>
+          ))}
+          <li ref={scrollRef} />
+        </ul>
+
+        <form className="form-container" onSubmit={sendMessage}>
+          <input
+            type="text"
+            className="message-input"
+            name="message"
+            autoComplete="off"
+            autoFocus
+            placeholder="Enter a message"
+          />
+          <button
+            type="submit"
+            title="Send message"
+            className="message-submit-button"
+          >
+            Send
+          </button>
+        </form>
+      </main>
     </div>
   );
 }
